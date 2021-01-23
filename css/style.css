@@ -105,12 +105,13 @@ h5 {
 }
 
 .boxPesquisa {
-    margin: 20px;
+    text-align: center;
+    display: inline-flex;
 }
 
 #pesquisa {
-    width: 400px;
-    display: inline-block;
+    text-align: center;
+    display: inline-flex;
 }
 
 .panel-default {
@@ -164,4 +165,6 @@ footer{
 .btn-pesquisar{
     background-color: black;
     color: white;
+    display: inline-flex;
 }
+

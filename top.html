@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="./css/style.css">
-    <title>Sky Sports Live, a Bootstrap test</title>
+    <title>Play the Music</title>
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60" class="top10">
 <nav class="navbar navbar-default navbar-fixed-top">
@@ -18,31 +18,33 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Play The Music</a>
+            <a class="navbar-brand" href="index.html">Play the Music</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#about">Music</a></li>
-                <li><a href="#sports">Sports</a></li>
-                <li><a href="#scores">Scores</a></li>
-                <li><a href="#skyBets">SkyBets</a></li>
+                <li><a href="fav.html">Favourites</a></li>
+                <li><a href="top.html">Charts</a></li>
             </ul>
         </div>
     </div>
 </nav>
 <div class="jumbotron text-center">
-    <h1>Play The Music</h1>
-    <div class="input-group">
-        <input type="text" id="pesquisa" name="pesquisa" class="form-control" size="50" placeholder="Tracks..." required>
-        <button class="btn btn-primary" id="btSearch"></button>
-    </div>
+    <h1>Play the Music</h1>
+    <form class="form-inline">
+        <div class="input-group">
+            <input type="text" class="form-control" size="50" placeholder="What you wanna listen to?" required>
+            <div class="input-group-btn">
+                <button class="btn btn-pesquisar glyphicon glyphicon-search" id="btSearch"></button>
+            </div>
+        </div>
+    </form>
 </div>
 <div class="panel-body">
     <div class="media-group">
         <ul class="media-list">
             <li class="media">
                 <div class="media-left">
-                    <a href="fav.html" id="fav">
+                    <a id="detalhes">
                         <img class="media-object" id="image">
                     </a>
                 </div>

@@ -1,9 +1,8 @@
 var cloneMedia = $('.media').clone();
 
-$('#btSearch').on('click', function(){
+$('#btPesquisar').on('click', function(){
 
     var valorPesquisa = $('#pesquisa').val();
-    $('.panel-title').text('Resultados da pesquisa de "' + valorPesquisa + '"');
 
     $('.media-list').html('');
 
@@ -12,18 +11,12 @@ $('#btSearch').on('click', function(){
         url: "http://ws.audioscrobbler.com/2.0/?method=track.search&track=" + valorPesquisa + "&api_key=db577d25137963e669181d8a9eedac9c&format=json"
     })
         .done(function(msg){
-            //console.log('msg');
-            console.log(msg);
-
-            //$.each(msg.Search, function(index, result){
             msg.results.trackmatches.track.forEach(function(result){
                 var liMedia = cloneMedia.clone();
-                //$('a', liMedia).attr('href', 'http://www.imdb.com/title/'+ result.imdbID);
                 $('.title', liMedia).text(result.name);
-                $('#btnfav', liMedia).attr('value', result.mbid);
                 $('.ano', liMedia).text(result.artist);
-                //$('.media-object', liMedia).attr('src','https://lastfm.freetls.fastly.net/i/u/34s/2a96cbd8b46e442fc41c2b86b821562f.png');
-                $('.tipo', liMedia).text(result.Type);
+                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist);
+                getAlbumImage(result.name, result.artist, liMedia);
                 $('.media-list').append(liMedia);
             })
         })
@@ -42,6 +35,9 @@ $(document).ready(function() {
         artist = decodeURI(value);
 
         detalhes(music, artist);
+    }
+    else if(body.is('.index')){
+        $('.media-list').html('');
     }
 });
 
@@ -64,7 +60,7 @@ function top10(pesquisa){
                 $('.title', liMedia).text(result.name);
                 $('.ano', liMedia).text(result.artist.name);
                 $('.media-object', liMedia).attr('src','https://lastfm.freetls.fastly.net/i/u/34s/2a96cbd8b46e442fc41c2b86b821562f.png');
-                $('#fav', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist.name);
+                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist);
                 $('.tipo', liMedia).text(result.Type);
                 $('.media-list').append(liMedia);
             })
@@ -77,7 +73,6 @@ function detalhes(music, artist){
         url: "http://ws.audioscrobbler.com/2.0/?method=track.getinfo&track=" + music + "&artist=" + artist + "&api_key=db577d25137963e669181d8a9eedac9c&format=json"
     })
         .done(function(msg){
-            this.artist = artist
             var song =  msg.track;
             $('#music').text(song.name);
             var image = $(".details").find('.image-album');
@@ -85,6 +80,18 @@ function detalhes(music, artist){
             $('#artist').text(artist);
             $('#album-name').text(song.album.title);
         })
+}
+
+function getAlbumImage(music, artist, liMedia){
+    $.ajax({
+        method: "GET",
+        url: "http://ws.audioscrobbler.com/2.0/?method=track.getinfo&track=" + music + "&artist=" + artist + "&api_key=db577d25137963e669181d8a9eedac9c&format=json"
+    })
+        .done(function(msg){
+            if(msg.error !== 6 && msg.track.album != null){
+                $('#image', liMedia).attr('src', msg.track.album.image[3]['#text']);
+            }
+        });
 }
 
 $('#fav').click(function(){ addFav(); return false; });
