@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Sky Sports Live, a Bootstrap test</title>
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60" class="details">
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#homepage">Play The Music</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#fav">FAVORITES</a></li>
+                <li><a href="#top">TOP10</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="jumbotron text-center">
+    <h1>Play the Music</h1>
+    <form class="form-inline">
+        <div class="input-group">
+            <input type="text" class="form-control" size="50" placeholder="What you wanna listen to?" required>
+            <div class="input-group-btn">
+                <button class="btn btn-pesquisar glyphicon glyphicon-search" id="btSearch"></button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="row">
+    <div class="column" style="padding-left: 40px">
+        <img class="image-album">
+    </div>
+    <div class="column" style="padding-left: 40px">
+        <h2 id="music"></h2>
+        <h3 id="artist"></h3>
+        <br>
+        <h3 id="album-name"></h3>
+    </div>
+</div>
+<footer>
+    Play The Music
+</footer>
+<script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>
