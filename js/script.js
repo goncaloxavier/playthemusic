@@ -25,6 +25,7 @@ $('#btPesquisar').on('click', function(){
 $(document).ready(function() {
     var body = $('body');
     if(body.is('.top10')){
+        $('.media-list').html('');
         top10(null);
     }else if(body.is('.details')){
         var urlParams = new URLSearchParams(window.location.search);
@@ -38,6 +39,7 @@ $(document).ready(function() {
     }
     else if(body.is('.index')){
         $('.media-list').html('');
+        homepage();
     }
 });
 
@@ -54,13 +56,32 @@ function top10(pesquisa){
         .done(function(msg){
             console.log(msg);
 
-            //$.each(msg.Search, function(index, result){
             msg.tracks.track.forEach(function(result){
                 var liMedia = cloneMedia.clone();
                 $('.title', liMedia).text(result.name);
                 $('.ano', liMedia).text(result.artist.name);
-                $('.media-object', liMedia).attr('src','https://lastfm.freetls.fastly.net/i/u/34s/2a96cbd8b46e442fc41c2b86b821562f.png');
-                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist);
+                getAlbumImage(result.name, result.artist.name, liMedia);
+                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist.name);
+                $('.tipo', liMedia).text(result.Type);
+                $('.media-list').append(liMedia);
+            })
+        })
+}
+
+function homepage(){
+    $.ajax({
+        method: "GET",
+        url: "http://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&limit=10&api_key=db577d25137963e669181d8a9eedac9c&format=json"
+    })
+        .done(function(msg){
+            console.log(msg);
+
+            msg.tracks.track.forEach(function(result){
+                var liMedia = cloneMedia.clone();
+                $('.title', liMedia).text(result.name);
+                $('.ano', liMedia).text(result.artist.name);
+                getAlbumImage(result.name, result.artist.name, liMedia);
+                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist.name);
                 $('.tipo', liMedia).text(result.Type);
                 $('.media-list').append(liMedia);
             })
@@ -75,10 +96,15 @@ function detalhes(music, artist){
         .done(function(msg){
             var song =  msg.track;
             $('#music').text(song.name);
-            var image = $(".details").find('.image-album');
-            image.attr('src', song.album.image[3]['#text']);
             $('#artist').text(artist);
-            $('#album-name').text(song.album.title);
+            var image = $(".details").find('.image-album');
+
+            if(song.album != null){
+                image.attr('src', song.album.image[3]['#text']);
+                $('#album-name').text(song.album.title);
+            }else{
+                image.attr('src', 'images/no_image.png');
+            }
         })
 }
 
@@ -90,6 +116,8 @@ function getAlbumImage(music, artist, liMedia){
         .done(function(msg){
             if(msg.error !== 6 && msg.track.album != null){
                 $('#image', liMedia).attr('src', msg.track.album.image[3]['#text']);
+            }else{
+                $('#image', liMedia).attr('src', 'images/no_image.png');
             }
         });
 }
