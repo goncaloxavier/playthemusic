@@ -130,8 +130,9 @@ function detalhes(music, artist){
             }
 
             if(song.wiki != null){
-                $('#wiki').text(song.wiki.content);
+                $('#wiki').html(song.wiki.content);
             }
+
 
             setFavText(music, artist);
         })
