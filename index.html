@@ -29,8 +29,13 @@
         </div>
     </nav>
     <div class="jumbotron text-center">
-        <h1>Play the Music</h1>
+        <h1 class="page-title">Play the Music</h1>
         <div class="boxPesquisa">
+            <select id="parameter">
+                <option value=1>Music</option>
+                <option value=2>Artist</option>
+                <option value=3>Album</option>
+            </select>
             <input id="pesquisa" type="text" class="form-control" size="50" placeholder="What you wanna listen to?">
             <div class="input-group-btn">
                 <button class="btn btn-pesquisar glyphicon glyphicon-search" id="btPesquisar"></button>

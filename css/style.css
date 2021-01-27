@@ -162,9 +162,42 @@ footer{
     width: 100%;
 }
 
+.navbar-brand{
+    font-family: "Segoe UI";
+}
+
+.navbar-nav, li{
+    font-family: "Segoe UI";
+}
+
 .btn-pesquisar{
     background-color: black;
     color: white;
     display: inline-flex;
+}
+
+#music{
+    font-family: "Segoe UI";
+}
+
+#artist{
+    font-family: "Segoe UI";
+}
+
+#album-name{
+    font-family: "Segoe UI";
+}
+
+#wiki{
+    width: 50%;
+    font-family: "Segoe UI";
+}
+
+#pesquisa{
+    font-family: "Segoe UI";
+}
+
+.page-title{
+    font-family: "Segoe UI";
 }
 
