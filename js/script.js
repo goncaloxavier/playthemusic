@@ -222,24 +222,33 @@ function actionFavourites(){
 
         var favs = localStorage.getItem("favourites"); //Ler textoJSON da memoria
         var validation = validateFav(music, artist);
+        var myFav = [];
         if(favs != null && validation == true){
             var favourites = {
                 music: music,
                 artist: artist
             };
 
-            var myJSON = JSON.stringify(favourites); //JSON para texto
-            favs += '\n' + myJSON;
-            localStorage.setItem("favourites", favs); //textoJSON em memoria
+            myFav = JSON.parse(localStorage.getItem("favourites"));
+            myFav.push(favourites);
+            console.log(myFav);
+            var myJSON = JSON.stringify(myFav); //JSON para texto
+            console.log(myJSON);
+            localStorage.setItem("favourites", myJSON); //textoJSON em memoria
+            $('#image-fav').attr('src', 'images/star.png');
+            $('#text-fav').text("Track on My Favourites (remove?)");
         }else if(favs == null){
             var favourites = {
                 music: music,
                 artist: artist
             };
-            var myJSON = JSON.stringify(favourites); //JSON para texto
+            myFav.push(favourites)
+            var myJSON = JSON.stringify(myFav); //JSON para texto
             localStorage.setItem("favourites", myJSON); //textoJSON em memoria
+            $('#image-fav').attr('src', 'images/star.png');
+            $('#text-fav').text("Track on My Favourites (remove?)");
         }else if(validation == false){
-            removeFav();
+            removeFav(music, artist);
         }
 
         return;
@@ -252,15 +261,14 @@ function actionFavourites(){
 
 function favourites(){
     var textJSON = localStorage.getItem("favourites");
-
     if(textJSON != null){
-        var strLines = textJSON.split("\n");
-
         try{
-            for (var i = 0; i<10; i++){
-                console.log(strLines[i]);
-                var json = JSON.parse(strLines[i]);
-                favorito(json.music, json.artist);
+            var myFav = JSON.parse(textJSON);
+            console.log(myFav);
+            if(myFav.length > 0){
+                for(var i = 0; i<myFav.length; i++){
+                    favorito(myFav[i].music, myFav[i].artist);
+                }
             }
         }catch (e) {
         }
@@ -271,14 +279,14 @@ function setFavText(music, artist){
     var textJSON = localStorage.getItem("favourites");
 
     if(textJSON != null){
-        var strLines = textJSON.split("\n");
-
+        var myFav = JSON.parse(textJSON);
         try{
-            for (var i = 0; i<10; i++){
-                var json = JSON.parse(strLines[i]);
-                if(json.music == music && json.artist == artist){
-                    $('#image-fav').attr('src', 'images/star.png');
-                    $('#text-fav').text("Already in Fav");
+            if(myFav.length > 0){
+                for (var i = 0; i<myFav.length; i++){
+                    if(myFav[i].music == music && myFav[i].artist == artist){
+                        $('#image-fav').attr('src', 'images/star.png');
+                        $('#text-fav').text("Track on My Favourites (remove?)");
+                    }
                 }
             }
         }catch (e){
@@ -291,15 +299,16 @@ function validateFav(music, artist){
     var textJSON = localStorage.getItem("favourites");
 
     if(textJSON != null){
-        var strLines = textJSON.split("\n");
-
+        var myFav = JSON.parse(textJSON);
         try {
-            for (var i = 0; i<10; i++){
-                var json = JSON.parse(strLines[i]);
-                if(json.music == music && json.artist == artist){
-                    validate = false;
+            if(myFav.length > 0){
+                for (var i = 0; i<myFav.length; i++){
+                    if(myFav[i].music == music && myFav[i].artist == artist){
+                        validate = false;
+                    }
                 }
             }
+
         } catch (error) {
         }
 
@@ -308,30 +317,25 @@ function validateFav(music, artist){
     return validate;
 }
 
-function removeFav(){
+function removeFav(music, artist){
     var textJSON = localStorage.getItem("favourites");
 
-
     if(textJSON != null){
-        var strLines = textJSON.split("\n");
-        console.log(strLines);
-
+        var myFav = JSON.parse(textJSON);
         try{
-            for (var i = 0; i<10; i++){
-                var json = JSON.parse(strLines[i]);
-                if(json.music == music && json.artist == artist){
-                    strLines.splice(i, 1);
-                    $('#image-fav').attr('src', 'images/logo-star.png');
-                    $('#text-fav').text("Add Music to Favourites");
-                   //vamos += strLines[i].replace('},', '},\n');
-
+            if(myFav.length > 0){
+                for(var i = 0; i<myFav.length; i++){
+                    if(myFav[i].music == music && myFav[i].artist == artist){
+                        myFav.splice(i, 1);
+                    }
                 }
+                var textJSON = JSON.stringify(myFav);
+                localStorage.setItem("favourites", textJSON);
+                $('#image-fav').attr('src', 'images/logo-star.png');
+                $('#text-fav').text("Add Track to Favourites");
             }
-
         }catch (e){
-            console.log(concat);
+
         }
     }
-
-    //localStorage.setItem("favourites", strLines); //textoJSON em memoria
 }
