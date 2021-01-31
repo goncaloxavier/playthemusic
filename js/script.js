@@ -5,7 +5,7 @@ $('#btPesquisar').on('click', function(){
     var valorPesquisa = $('#pesquisa').val();
 
     $('.media-list').html('');
-
+    $("#h1-error").text("");
 
     var parameter = $("#parameter").val();
 
@@ -24,7 +24,7 @@ $(document).ready(function() {
     var body = $('body');
     if(body.is('.top10')){
         $('.media-list').html('');
-        top10(null);
+        top10();
     }else if(body.is('.details')){
         $('.media-list').html('');
         var urlParams = new URLSearchParams(window.location.search);
@@ -35,6 +35,7 @@ $(document).ready(function() {
         artist = decodeURI(value);
 
         detalhes(music, artist);
+        loadVideo(music, artist);
     }
     else if(body.is('.index')){
         $('.media-list').html('');
@@ -45,28 +46,34 @@ $(document).ready(function() {
     }
 });
 
-function top10(pesquisa){
+function top10(){
+    var country = $('#country').val();
 
-    if(pesquisa == null){
-        pesquisa = "portugal";
-    }
+    $('.media-list').html('');
 
     $.ajax({
         method: "GET",
-        url: "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country="+pesquisa+"&api_key=db577d25137963e669181d8a9eedac9c&format=json"
+        url: "http://ws.audioscrobbler.com/2.0/?method=geo.gettoptracks&country="+country+"&api_key=db577d25137963e669181d8a9eedac9c&format=json"
     })
         .done(function(msg){
             console.log(msg);
-
-            msg.tracks.track.forEach(function(result){
-                var liMedia = cloneMedia.clone();
-                $('.title', liMedia).text(result.name);
-                $('.ano', liMedia).text(result.artist.name);
-                getAlbumImage(result.name, result.artist.name, liMedia);
-                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist.name);
-                $('.tipo', liMedia).text(result.Type);
-                $('.media-list').append(liMedia);
-            })
+            var i = 1;
+            if(msg['error'] == null){
+                msg.tracks.track.forEach(function(result){
+                    var liMedia = cloneMedia.clone();
+                    $("#h1-error").text("");
+                    $('.posicao', liMedia).text("#" + i);
+                    $('.title', liMedia).text(result.name);
+                    $('.ano', liMedia).text(result.artist.name);
+                    getAlbumImage(result.name, result.artist.name, liMedia);
+                    $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist.name);
+                    $('.tipo', liMedia).text(result.Type);
+                    $('.media-list').append(liMedia);
+                    i++;
+                })
+            }else{
+                $("#h1-error").text("NO RESULTS FOUND");
+            }
         })
 }
 
@@ -132,8 +139,6 @@ function detalhes(music, artist){
             if(song.wiki != null){
                 $('#wiki').html(song.wiki.content);
             }
-
-
             setFavText(music, artist);
         })
 }
@@ -270,6 +275,8 @@ function favourites(){
                 for(var i = 0; i<myFav.length; i++){
                     favorito(myFav[i].music, myFav[i].artist);
                 }
+            }else{
+                $("#h1-error").text("Add tracks to favourites...");
             }
         }catch (e) {
         }
@@ -339,4 +346,29 @@ function removeFav(music, artist){
 
         }
     }
+}
+
+function loadVideo(music, artist) {
+    // make ajax call
+    // populate divs with results
+
+    // Here we are composing the endpoint with query parameters as defined from https://developers.google.com/youtube/v3/docs/search/list
+    // part=snippet is like a required default
+    // maxResults=10 set the number of results we want to retrieve
+    // key is your custom key gotten from the previous step
+
+    // we invoke an ajax request here setting the url, method GET
+    // on success we want to populate the div .video-play with an iframe that will hold the first video result. The class embed-resopnsive-item is bootstrap made.suggest-list
+    // then we call populateSuggestions and pass in the rest of the videos for the suggested videos section
+    // on error, we want to show the error response text in place of the video
+
+
+    $.ajax({
+        method: "GET",
+        url: "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=AIzaSyA5Dt0C8yNe1okG218Mr8LtgIWezk9hzHI&q=" + music + " " + artist,
+    })
+        .done(function(result){
+            console.log(result);
+            $('.video-play').append(`<iframe class="embed-responsive-item" src=https://www.youtube.com/embed/${result.items[0].id.videoId} allowFullScreen title='youtube player' />`);
+        })
 }

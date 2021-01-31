@@ -72,7 +72,7 @@
     border: 0;
     font-size: 12px !important;
     line-height: 1.428 !important;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     border-radius: 0;
 }
 
@@ -112,6 +112,7 @@ h5 {
 #pesquisa {
     text-align: center;
     display: inline-flex;
+    width: 300px;
 }
 
 .panel-default {
@@ -189,7 +190,7 @@ footer{
 }
 
 #wiki{
-    width: 50%;
+    width: 100%;
     font-family: "Segoe UI";
 }
 
@@ -206,3 +207,29 @@ footer{
     height: 50px;
 }
 
+#logo-main{
+    width: 150px;
+    height: 150px;
+}
+
+#country{
+    height: 30px;
+    width: auto;
+}
+
+#logo-nav{
+    width: 50px;
+    height: 50px;
+}
+
+.nav-href{
+    color: white;
+}
+a.nav-href:link {color: white;}
+a.nav-href:visited {color: white;}
+a.nav-href:hover {color: white;}
+
+.embed-responsive-item{
+    width: 400px;
+    height: 250px;
+}
