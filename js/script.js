@@ -6,7 +6,7 @@ $('#btPesquisar').on('click', function(){
 
     $('.media-list').html('');
     $("#h1-error").text("");
-
+    $('.video-play').text("");
     var parameter = $("#parameter").val();
 
     if(parameter == 1){
@@ -34,7 +34,7 @@ $(document).ready(function() {
         value = urlParams.get('artist');
         artist = decodeURI(value);
 
-        detalhes(music, artist);
+        details(music, artist);
         loadVideo(music, artist);
     }
     else if(body.is('.index')){
@@ -42,7 +42,7 @@ $(document).ready(function() {
         homepage();
     }else if(body.is('.favourites')){
         $('.media-list').html('');
-        favourites();
+        getFavourites();
     }
 });
 
@@ -62,12 +62,11 @@ function top10(){
                 msg.tracks.track.forEach(function(result){
                     var liMedia = cloneMedia.clone();
                     $("#h1-error").text("");
-                    $('.posicao', liMedia).text("#" + i);
-                    $('.title', liMedia).text(result.name);
-                    $('.ano', liMedia).text(result.artist.name);
+                    $('.position', liMedia).text("#" + i);
+                    $('.track', liMedia).text(result.name);
+                    $('.artist', liMedia).text(result.artist.name);
                     getAlbumImage(result.name, result.artist.name, liMedia);
-                    $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist.name);
-                    $('.tipo', liMedia).text(result.Type);
+                    $('#details', liMedia).attr('href', "details.html?music="+result.name+"&artist="+result.artist.name);
                     $('.media-list').append(liMedia);
                     i++;
                 })
@@ -87,17 +86,16 @@ function homepage(){
 
             msg.tracks.track.forEach(function(result){
                 var liMedia = cloneMedia.clone();
-                $('.title', liMedia).text(result.name);
-                $('.ano', liMedia).text(result.artist.name);
+                $('.track', liMedia).text(result.name);
+                $('.artist', liMedia).text(result.artist.name);
                 getAlbumImage(result.name, result.artist.name, liMedia);
-                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist.name);
-                $('.tipo', liMedia).text(result.Type);
+                $('#details', liMedia).attr('href', "details.html?music="+result.name+"&artist="+result.artist.name);
                 $('.media-list').append(liMedia);
             })
         })
 }
 
-function favorito(music, artist){
+function displayFavorites(music, artist){
     $.ajax({
         method: "GET",
         url: "http://ws.audioscrobbler.com/2.0/?method=track.getinfo&track=" + music + "&artist=" + artist + "&api_key=db577d25137963e669181d8a9eedac9c&format=json"
@@ -105,19 +103,18 @@ function favorito(music, artist){
         .done(function(msg){
             var song =  msg.track;
             var liMedia = cloneMedia.clone();
-            $('.title', liMedia).text(song.name);
-            $('.ano', liMedia).text(song.artist.name);
+            $('.track', liMedia).text(song.name);
+            $('.artist', liMedia).text(song.artist.name);
             getAlbumImage(song.name, song.artist.name, liMedia);
-            $('#detalhes', liMedia).attr('href', "detalhes.html?music="+song.name+"&artist="+song.artist.name);
+            $('#details', liMedia).attr('href', "details.html?music="+song.name+"&artist="+song.artist.name);
             $('.media-list').append(liMedia);
-
             if(song.wiki != null){
                 $('#wiki').text(song.wiki.content);
             }
         })
 }
 
-function detalhes(music, artist){
+function details(music, artist){
     $.ajax({
         method: "GET",
         url: "http://ws.audioscrobbler.com/2.0/?method=track.getinfo&track=" + music + "&artist=" + artist + "&api_key=db577d25137963e669181d8a9eedac9c&format=json"
@@ -162,15 +159,20 @@ function searchTrack(search){
         method: "GET",
         url: "http://ws.audioscrobbler.com/2.0/?method=track.search&track=" + search + "&api_key=db577d25137963e669181d8a9eedac9c&format=json"
     })
+
         .done(function(msg){
-            msg.results.trackmatches.track.forEach(function(result){
-                var liMedia = cloneMedia.clone();
-                $('.title', liMedia).text(result.name);
-                $('.ano', liMedia).text(result.artist);
-                $('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist);
-                getAlbumImage(result.name, result.artist, liMedia);
-                $('.media-list').append(liMedia);
-            })
+            if(msg.results.trackmatches.track.length > 0){
+                msg.results.trackmatches.track.forEach(function(result){
+                    var liMedia = cloneMedia.clone();
+                    $('.track', liMedia).text(result.name);
+                    $('.artist', liMedia).text(result.artist);
+                    $('#details', liMedia).attr('href', "details.html?music="+result.name+"&artist="+result.artist);
+                    getAlbumImage(result.name, result.artist, liMedia);
+                    $('.media-list').append(liMedia);
+                })
+            }else{
+                $("#h1-error").text("NO RESULTS FOUND");
+            }
         })
 }
 
@@ -180,14 +182,17 @@ function searchArtist(search){
         url: "http://ws.audioscrobbler.com/2.0/?method=artist.search&artist=" + search + "&api_key=db577d25137963e669181d8a9eedac9c&format=json"
     })
         .done(function(msg){
-            msg.results.artistmatches.artist.forEach(function(result){
-                var liMedia = cloneMedia.clone();
-                $('.title', liMedia).text(result.name);
-                $('.ano', liMedia).text(result.artist);
-                //$('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist);
-                $('#image', liMedia).attr('src', 'images/no_image.png');
-                $('.media-list').append(liMedia);
-            })
+            console.log(msg);
+            if(msg.results.artistmatches.artist.length > 0){
+                msg.results.artistmatches.artist.forEach(function(result){
+                    var liMedia = cloneMedia.clone();
+                    $('.track', liMedia).text(result.name);
+                    $('#image', liMedia).attr('src', 'images/no_image.png');
+                    $('.media-list').append(liMedia);
+                })
+            }else {
+                $("#h1-error").text("NO RESULTS FOUND");
+            }
         })
 }
 
@@ -197,14 +202,16 @@ function searchAlbum(search){
         url: "http://ws.audioscrobbler.com/2.0/?method=album.search&album="+ search +"&api_key=db577d25137963e669181d8a9eedac9c&format=json"
     })
         .done(function(msg){
-            msg.results.albummatches.album.forEach(function(result){
-                var liMedia = cloneMedia.clone();
-                $('.title', liMedia).text(result.name);
-                $('.ano', liMedia).text(result.artist);
-                //$('#detalhes', liMedia).attr('href', "detalhes.html?music="+result.name+"&artist="+result.artist);
-                getAlbumImage(result.name, result.artist, liMedia);
-                $('.media-list').append(liMedia);
-            })
+            if(msg.results.albummatches.album.length > 0){
+                msg.results.albummatches.album.forEach(function(result){
+                    var liMedia = cloneMedia.clone();
+                    $('.track', liMedia).text(result.name);
+                    getAlbumImage(result.name, result.artist, liMedia);
+                    $('.media-list').append(liMedia);
+                })
+            }else{
+                $("#h1-error").text("NO RESULTS FOUND");
+            }
         })
 }
 
@@ -230,13 +237,13 @@ function actionFavourites(){
         var validation = validateFav(music, artist);
         var myFav = [];
         if(favs != null && validation == true){
-            var favourites = {
+            var favourite = {
                 music: music,
                 artist: artist
             };
 
             myFav = JSON.parse(localStorage.getItem("favourites"));
-            myFav.push(favourites);
+            myFav.push(favourite);
             console.log(myFav);
             var myJSON = JSON.stringify(myFav); //JSON para texto
             console.log(myJSON);
@@ -244,11 +251,11 @@ function actionFavourites(){
             $('#image-fav').attr('src', 'images/star.png');
             $('#text-fav').text("Track on My Favourites (remove?)");
         }else if(favs == null){
-            var favourites = {
+            var favourite = {
                 music: music,
                 artist: artist
             };
-            myFav.push(favourites)
+            myFav.push(favourite);
             var myJSON = JSON.stringify(myFav); //JSON para texto
             localStorage.setItem("favourites", myJSON); //textoJSON em memoria
             $('#image-fav').attr('src', 'images/star.png');
@@ -265,21 +272,26 @@ function actionFavourites(){
     }
 }
 
-function favourites(){
+function getFavourites(){
     var textJSON = localStorage.getItem("favourites");
     if(textJSON != null){
         try{
+            console.log(textJSON)
             var myFav = JSON.parse(textJSON);
+            console.log(textJSON)
             console.log(myFav);
-            if(myFav.length > 0){
+            if(myFav.length > 0 && myFav != null){
                 for(var i = 0; i<myFav.length; i++){
-                    favorito(myFav[i].music, myFav[i].artist);
+                    displayFavorites(myFav[i].music, myFav[i].artist);
                 }
             }else{
+
                 $("#h1-error").text("Add tracks to favourites...");
             }
         }catch (e) {
         }
+    }else {
+        $("#h1-error").text("Add tracks to favourites...");
     }
 }
 
@@ -319,9 +331,7 @@ function validateFav(music, artist){
 
         } catch (error) {
         }
-
     }
-
     return validate;
 }
 
@@ -349,20 +359,6 @@ function removeFav(music, artist){
 }
 
 function loadVideo(music, artist) {
-    // make ajax call
-    // populate divs with results
-
-    // Here we are composing the endpoint with query parameters as defined from https://developers.google.com/youtube/v3/docs/search/list
-    // part=snippet is like a required default
-    // maxResults=10 set the number of results we want to retrieve
-    // key is your custom key gotten from the previous step
-
-    // we invoke an ajax request here setting the url, method GET
-    // on success we want to populate the div .video-play with an iframe that will hold the first video result. The class embed-resopnsive-item is bootstrap made.suggest-list
-    // then we call populateSuggestions and pass in the rest of the videos for the suggested videos section
-    // on error, we want to show the error response text in place of the video
-
-
     $.ajax({
         method: "GET",
         url: "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&key=AIzaSyA5Dt0C8yNe1okG218Mr8LtgIWezk9hzHI&q=" + music + " " + artist,
