@@ -151,11 +151,11 @@ footer{
 }
 
 .navbar-brand{
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 .navbar-nav, li{
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 .btn-pesquisar{
@@ -165,31 +165,32 @@ footer{
 }
 
 #music{
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 #artist{
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 #album-name{
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 #wiki{
     width: 100%;
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 #pesquisa{
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 .page-title{
-    font-family: "Segoe UI";
+    font-family: "Helvetica Neue";
 }
 
 #image-fav{
+    cursor: pointer;
     width: 50px;
     height: 50px;
 }
@@ -216,7 +217,17 @@ a.nav-href:link {color: white;}
 a.nav-href:visited {color: white;}
 a.nav-href:hover {color: white;}
 
+a:link {color: black;}
+a:visited {color: black;}
+a:hover {color: black;}
+
 .embed-responsive-item{
     width: 400px;
     height: 250px;
+}
+
+#details{
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
 }

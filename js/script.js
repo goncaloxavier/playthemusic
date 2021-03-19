@@ -3,21 +3,22 @@ var cloneMedia = $('.media').clone();
 $('#btPesquisar').on('click', function(){
     $('.row').html('');
     var valorPesquisa = $('#pesquisa').val();
+    var parameter = $("#parameter").val()
 
-    $('.media-list').html('');
-    $("#h1-error").text("");
-    $('.video-play').text("");
-    var parameter = $("#parameter").val();
+    if(valorPesquisa){
+        $('.media-list').html('');
+        $("#h1-error").text("");
+        $('.video-play').text("");
 
-    if(parameter == 1){
-        searchTrack(valorPesquisa);
-    }else if(parameter == 2){
-        searchArtist(valorPesquisa);
+        if(parameter == 1){
+            searchTrack(valorPesquisa);
+        }else if(parameter == 2){
+            searchArtist(valorPesquisa);
+        }
+        else{
+            searchAlbum(valorPesquisa);
+        }
     }
-    else{
-        searchAlbum(valorPesquisa);
-    }
-
 });
 
 $(document).ready(function() {
@@ -43,6 +44,18 @@ $(document).ready(function() {
     }else if(body.is('.favourites')){
         $('.media-list').html('');
         getFavourites();
+    }
+});
+
+var input = document.getElementById("pesquisa");
+
+input.addEventListener("keyup", function(event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        // Trigger the button element with a click
+        document.getElementById("btPesquisar").click();
     }
 });
 
