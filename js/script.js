@@ -1,26 +1,5 @@
 var cloneMedia = $('.media').clone();
 
-$('#btPesquisar').on('click', function(){
-    $('.row').html('');
-    var valorPesquisa = $('#pesquisa').val();
-    var parameter = $("#parameter").val()
-
-    if(valorPesquisa){
-        $('.media-list').html('');
-        $("#h1-error").text("");
-        $('.video-play').text("");
-
-        if(parameter == 1){
-            searchTrack(valorPesquisa);
-        }else if(parameter == 2){
-            searchArtist(valorPesquisa);
-        }
-        else{
-            searchAlbum(valorPesquisa);
-        }
-    }
-});
-
 $(document).ready(function() {
     var body = $('body');
     if(body.is('.top10')){
@@ -44,6 +23,33 @@ $(document).ready(function() {
     }else if(body.is('.favourites')){
         $('.media-list').html('');
         getFavourites();
+    }
+});
+
+$('#btPesquisar').on('click', function(){
+    var valorPesquisa = $('#pesquisa').val();
+    var parameter = $("#parameter").val();
+
+    if(valorPesquisa){
+        $('.media-list').html('');
+        $("#h1-error").text("");
+        $('.video-play').text("");
+
+        if(document.getElementsByTagName("h1")[0]){
+            document.getElementsByTagName("h1")[0].remove();
+        }
+        else if(document.getElementsByName("country")[0]){
+            document.getElementsByName("country")[0].remove();
+        }
+
+        if(parameter == 1){
+            searchTrack(valorPesquisa);
+        }else if(parameter == 2){
+            searchArtist(valorPesquisa);
+        }
+        else{
+            searchAlbum(valorPesquisa);
+        }
     }
 });
 
